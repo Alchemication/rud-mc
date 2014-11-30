@@ -16,6 +16,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.example.adam.rudmp.SongActivity"
+            android:label="@string/app_name"
+            android:parentActivityName="com.example.adam.rudmp.CatalogueActivity">
+
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.adam.rudmp.CatalogueActivity"/>
+
+        </activity>
+
     </application>
 
 </manifest>

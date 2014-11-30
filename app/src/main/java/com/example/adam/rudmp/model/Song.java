@@ -3,10 +3,12 @@ package com.example.adam.rudmp.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
+
 /**
  * Created by adam on 29/11/14.
  *
- * We need to implement parcelable
+ * We need to implement Parcelable
  * to be able to easily save/retrieve
  * a arrayList of objects
  */
@@ -53,7 +55,11 @@ public class Song implements Parcelable {
     }
 
     public String toString() {
-        return getArtist() + ": " + getTitle();
+        return getTitle();
+    }
+
+    public String showDetail() {
+        return getArtist() + ": " + getTitle() + ", " + getLink();
     }
 
     @Override

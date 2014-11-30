@@ -2,6 +2,7 @@ package com.example.adam.rudmp;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
@@ -89,12 +90,34 @@ public class CatalogueActivity extends Activity {
         // update list view with the songs
         this.songListView.setAdapter(adapter);
 
+        // set up listeners
+        this.setupListeners();
+    }
+
+    /**
+     * Setup listener to fire a new activity when
+     * item in the listView clicked
+     */
+    private void setupListeners() {
+
+        // need to use this trick for activity to be accessible
+        // in the inner class below
+        final CatalogueActivity catActivity = this;
+
         // attach click listener on the listView element,
         // this will launch a new activity, which will display the song detail
         this.songListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             public void onItemClick(AdapterView parent, View v, int position, long id)
             {
+                // create an intent for launching songActivity
+                Intent i = new Intent(catActivity, SongActivity.class);
 
+                // get corresponding Song object for the clicked element
+                Song s = catActivity.catalogueController.getSongList().get(position);
+
+                // create bundle, which will be sent to the new activity
+                i.putExtra("selectedSong", s);
+                catActivity.startActivity(i);
             }
         });
     }
