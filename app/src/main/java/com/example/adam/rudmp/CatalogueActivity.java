@@ -161,7 +161,7 @@ public class CatalogueActivity extends Activity {
      *
      * @param errorMessage Error to be displayed
      */
-    private void setErrorMessage(String errorMessage) {
+    protected void setErrorMessage(String errorMessage) {
         songListView.setVisibility(View.GONE);
         errorMsgTextView.setVisibility(View.VISIBLE);
         errorMsgTextView.setText(errorMessage);

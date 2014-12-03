@@ -64,75 +64,80 @@ public class SongActivity extends Activity implements View.OnClickListener {
             // using implicit intent
             case R.id.viewBtn:
 
-                launchWebPageIntent(this.selectedSong.getLink());
+                openDialog(v, "Are you sure", "Do you really want to open the link?", this.selectedSong);
                 break;
 
             // share the link using implicit intent
             case R.id.shareBtn:
 
-                shareUrl(this.selectedSong.getLink(), this.selectedSong.getTitle());
+                openDialog(v, "Are you sure", "Do you really want to share the link?", this.selectedSong);
                 break;
         }
     }
 
     /**
-     * Share link using capable apps
+     * Show dialog box and perform action based on yes/no selection
      *
-     * @param url url to share
-     * @param title title to display
+     * @param view Object which has an id to use
+     * @param title Title of the dialog
+     * @param msg Message to display
+     * @param object Flexible object to be passed into the dialog
      */
-    private void shareUrl(String url, String title) {
+    private void openDialog(View view, String title, String msg, Object object) {
 
-        final String urlToOpen      = url;
-        final String titleToDisplay = title;
+        final Object ob = object;
+        final View v    = view;
 
+        // open default yes/no simple confirm dialog
+        // and perform action based on the id in the view
         new AlertDialog.Builder(this)
-                .setTitle("Are you sure")
-                .setMessage("Do you really want to share the link?")
+                .setTitle(title)
+                .setMessage(msg)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
 
-                        Intent share = new Intent(android.content.Intent.ACTION_SEND);
-                        share.setType("text/plain");
-                        share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+                        // based on id of item - perform different actions
+                        switch (v.getId()) {
 
-                        // Add data to the intent, the receiving app will decide
-                        // what to do with it.
-                        share.putExtra(Intent.EXTRA_SUBJECT, titleToDisplay);
-                        share.putExtra(Intent.EXTRA_TEXT, urlToOpen);
+                            // open dialog box and follow the link
+                            // using implicit intent
+                            case R.id.viewBtn:
 
-                        startActivity(Intent.createChooser(share, "Share link!"));
+                                // create new intent
+                                Intent launchWebPageIntent = new Intent(Intent.ACTION_VIEW);
+
+                                // put the link in the bundle,
+                                // method putExtra() from the notes
+                                // was triggering an Exception, used following resource:
+                                // @see http://stackoverflow.com/questions/3004515/android-sending-an-intent-to-browser-to-open-specific-url
+                                Song song = (Song) ob;
+                                launchWebPageIntent.setData(Uri.parse(song.getLink()));
+
+                                // kick off intent
+                                startActivity(launchWebPageIntent);
+
+                                break;
+
+                            // share the link using implicit intent
+                            case R.id.shareBtn:
+
+                                Intent share = new Intent(android.content.Intent.ACTION_SEND);
+                                share.setType("text/plain");
+                                share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+
+                                // Add data to the intent, the receiving app will decide
+                                // what to do with it.
+                                Song selectedSong = (Song) ob;
+                                share.putExtra(Intent.EXTRA_SUBJECT, selectedSong.getTitle());
+                                share.putExtra(Intent.EXTRA_TEXT, selectedSong.getLink());
+
+                                startActivity(Intent.createChooser(share, "Share link!"));
+
+                                break;
+                        }
                     }})
                 .setNegativeButton(android.R.string.no, null).show();
-    }
 
-    /**
-     * Launch apps capable of opening html,
-     * and send the link of the song
-     */
-    private void launchWebPageIntent(String url) {
-
-        final String urlToOpen = url;
-
-        new AlertDialog.Builder(this)
-                .setTitle("Are you sure")
-                .setMessage("Do you really want to follow the link?")
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        // create new intent
-                        Intent launchWebPageIntent = new Intent(Intent.ACTION_VIEW);
-
-                        // put the link in the bundle,
-                        // method putExtra() from the notes
-                        // was triggering an Exception, used following resource:
-                        // @see http://stackoverflow.com/questions/3004515/android-sending-an-intent-to-browser-to-open-specific-url
-                        launchWebPageIntent.setData(Uri.parse(urlToOpen));
-
-                        // kick off intent
-                        startActivity(launchWebPageIntent);
-                    }})
-                .setNegativeButton(android.R.string.no, null).show();
     }
 }
