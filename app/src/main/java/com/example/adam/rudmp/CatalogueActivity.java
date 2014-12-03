@@ -83,7 +83,6 @@ public class CatalogueActivity extends Activity {
         this.adapter = new ArrayAdapter<Song>(
             this,
             android.R.layout.simple_list_item_1,
-            android.R.id.text1,
             this.songList
         );
 
