@@ -79,11 +79,11 @@ public class SongActivity extends Activity implements View.OnClickListener {
      * Show dialog box and perform action based on yes/no selection
      *
      * @param view Object which has an id to use
-     * @param title Title of the dialog
-     * @param msg Message to display
+     * @param dialogTitle Title of the dialog
+     * @param dialogMsg Message to display
      * @param object Flexible object to be passed into the dialog
      */
-    private void openDialog(View view, String title, String msg, Object object) {
+    private void openDialog(View view, String dialogTitle, String dialogMsg, Object object) {
 
         final Object ob = object;
         final View v    = view;
@@ -91,8 +91,8 @@ public class SongActivity extends Activity implements View.OnClickListener {
         // open default yes/no simple confirm dialog
         // and perform action based on the id in the view
         new AlertDialog.Builder(this)
-                .setTitle(title)
-                .setMessage(msg)
+                .setTitle(dialogTitle)
+                .setMessage(dialogMsg)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
